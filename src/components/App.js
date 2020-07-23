@@ -4,7 +4,9 @@ import React, {Component} from 'react';
 class Game extends Component {
 
   render(){
-    return ();
+    return (
+      <h1>Hello</h1>
+    )
   }
 }
 
