@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from "styled-components";
 import { Square } from './Square';
+import { Consumer } from '../Context';
 
 //Styled components
 
@@ -63,12 +64,14 @@ class Cell extends Component {
     count: 0,
     playing: true,
     board: ["", "", "", "", "", "", "", "", ""],
-    player: this.props.player1,
-    winner: ""
+    winner: "",
+    player1: this.props.player1,
+    player2: this.props.player2
   }
   
+
+
   changeColor = (event) => {
-    const { player1, player2 } = this.props;
     const { color, playing, board } = this.state;
 
     if (!board[event.target.id] && playing === true) {    
@@ -79,12 +82,10 @@ class Cell extends Component {
       if (color === "#6af") {
         this.setState({ 
           color: "#f6c",
-          player: player1,
         })  
       } else {
         this.setState({ 
           color: "#6af",
-          player: player2,
         })
       }
       this.setState( prevState => ({
@@ -93,16 +94,19 @@ class Cell extends Component {
     }
   }
 
+  chooseWinner () {
+    return this.state.color === "#6af" ? this.state.player2 : this.state.player1;
+  }
+
   componentDidUpdate () {
-    const { count, playing, player, player1 } = this.state;
+    const { count, playing } = this.state;
     if ((this.conditions() || count === 9) && playing === true) {
       this.setState({
         playing: false,
-        player: player1
       })
       if (this.conditions()) {
-        alert(`${player} wins`);
-        this.setState({ winner: player })
+        alert(`${ this.chooseWinner() } wins`);
+        this.setState({ winner: `${ this.chooseWinner() }` })
       } else {
         alert("Tie");
       }
@@ -136,36 +140,45 @@ class Cell extends Component {
 
   render() {
     const { winner, count, color, playing, board } = this.state;
-    const { player1, player2, onClickNewGameButton } = this.props;
     return (
-      <Body>
-        { winner && <Banner color="#1a7">{winner} wins</Banner>}
-        { (!winner && count === 9) && <Banner color="#e69500">Tie</Banner>}
-        <Players>
-          <div>
-            <Paragraph primary="#6af">{ player1 }</Paragraph>
-            { (color === "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
-          </div>
-          <div>
-            <Paragraph primary="#f6c">{ player2 }</Paragraph>
-            { (color !== "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
-          </div>
-        </Players>
-        <Board>
-          <Content>
-            { board.map((num, i) => <Square key={ i } 
-                                            id={ i } 
-                                            color={ num } 
-                                            changeColor={ this.changeColor }
-                                    />
-            ) }
-          </Content>  
-        </Board>
-        <Buttons>
-          <Button onClick={ this.restart }>Restart</Button>
-          <Button onClick={ onClickNewGameButton }>New Game</Button>
-        </Buttons>
-      </Body>
+      <Consumer>
+        {context => {
+          const { onClickNewGameButton } = context;
+          const { player1, player2 } = this.props;
+          return (
+            <Body>
+              { winner && <Banner color="#1a7">{winner} wins</Banner>}
+              { (!winner && count === 9) && <Banner color="#e69500">Tie</Banner>}
+              <Players>
+                <div>
+                  <Paragraph primary="#6af">{ player1 }</Paragraph>
+                  { (color === "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
+                </div>
+                <div>
+                  <Paragraph primary="#f6c">{ player2 }</Paragraph>
+                  { (color !== "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
+                </div>
+              </Players>
+              <Board>
+                <Content>
+                  { board.map((num, i) => 
+                    <Square 
+                      key={ i } 
+                      id={ i } 
+                      color={ num } 
+                      changeColor={ this.changeColor }
+                    />
+                  ) }
+                </Content>  
+              </Board>
+              <Buttons>
+                <Button onClick={ this.restart }>Restart</Button>
+                <Button onClick={ onClickNewGameButton }>New Game</Button>
+              </Buttons>
+            </Body>
+          );
+        }}
+      </Consumer>
     )
   }
 }

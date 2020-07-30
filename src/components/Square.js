@@ -20,12 +20,14 @@ const Col = styled.div`
 const Square = ({ id, color, changeColor }) => {  
   return (
     <div>
-      <Col id={ id }
-           onClick={ changeColor }
-           img={ color === "#6af" ? x : 
-                 color === "#f6c" ? o :
-                 color === ""
-               }
+      <Col 
+        id={ id }
+        onClick={ changeColor }
+        img={ 
+          color === "#6af" ? x : 
+          color === "#f6c" ? o :
+          color === ""
+        }
       />          
     </div>
   );
