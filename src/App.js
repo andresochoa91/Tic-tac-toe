@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Cell from './components/Cell';
 import Info from './components/Info';
 import tictactoebg from './tictactoebg.png';
-import { Provider } from './Context';
+import { Consumer } from './Context';
 
 const Background = styled.div`
   background: url(${tictactoebg}) no-repeat center center/contain;
@@ -38,67 +38,31 @@ const Body = styled.div`
 
 class App extends Component {
 
-  state = {
-    start: false,
-    readyToPlay: false,
-    player1: "",
-    player2: ""
-  }
-
-  handleInput = (e) => {
-    if (e.target.id === "player1") {
-      this.setState({ player1: e.target.value }) 
-    } else if (e.target.id === "player2") {
-      this.setState({ player2: e.target.value }) 
-    }
-  } 
-
-  onClickStartButton = (event) => {
-    event.preventDefault();
-    const { player1, player2 } = this.state;
-    if (player1 && player2) {
-      this.setState({ readyToPlay: true });
-    } else {
-      alert("You must have 2 players to start the game!");
-    }
-  }
-
-  onClickNewGameButton = () => {
-    this.setState({ readyToPlay: false, player1: "", player2: "" });
-  }
-
-  startButton = () => {
-    this.setState({ start: true });
-  }
-
   render() {
-    const { start, readyToPlay, player1, player2 } = this.state;
     return (
-      <Provider value={{
-        onClickStartButton: this.onClickStartButton,
-        handleInput: this.handleInput,
-        onClickNewGameButton: this.onClickNewGameButton,
-        player1: player1,      
-        player2: player2      
-      }}>
-        <Body>
-          <Background>
-          </Background>
-          <Title>Tic Tac Toe!</Title>
-          {
-            start === false ? 
-            <div>
-              <Paragraph>This is a simple Tic Tac Toe game.</Paragraph>
-              <Button onClick={ this.startButton }>START</Button>
-            </div> :
-            
-            readyToPlay === false ?
-            <Info /> :
-            
-            <Cell player1={ player1 } player2={ player2 }/>
-          }
-        </Body>
-      </Provider>
+      <Consumer>
+        {context => {
+          return (
+            <Body>
+              <Background>
+              </Background>
+              <Title>Tic Tac Toe!</Title>
+              {
+                context.start === false ? 
+                <div>
+                  <Paragraph>This is a simple Tic Tac Toe game.</Paragraph>
+                  <Button onClick={ context.startButton }>START</Button>
+                </div> :
+                
+                context.readyToPlay === false ?
+                <Info /> :
+                
+                <Cell player1={ context.player1 } player2={ context.player2 }/>
+              }
+            </Body>
+          );
+        }}
+      </Consumer>
     );
   }
 }
