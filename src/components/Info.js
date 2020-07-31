@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { Consumer } from '../Context';
- 
+
 const Button = styled.button`
   display: block;
   border: none;
@@ -16,7 +16,7 @@ const Button = styled.button`
   }
 `;
 
-const Contain = styled.div`
+const Container = styled.div`
   label, input {
     display: block;
     width: 200px;
@@ -36,30 +36,35 @@ const Contain = styled.div`
   }
 `;
 
-const Info = () => {
-  return (
-    <Consumer>
-      {context => {
-        const { handleInput, onClickStartButton } = context;
-        return (
-          <Contain>
-            <form onChange={ handleInput } onKeyPress={ (event) => { 
-              if (event.key === "Enter") {
-                onClickStartButton(event); 
-              }} } 
-            >
-              <label style={{ backgroundColor: "#6af" }} htmlFor="player1">Player 1</label>
-              <input maxLength={12} type="text" id="player1"/>
-              <br/>
-              <label style={{ backgroundColor: "#f6c" }} htmlFor="player2">Player 2</label>
-              <input maxLength={12} type="text" id="player2"/>
-              <Button onClick={ onClickStartButton }>Start playing</Button>
-            </form>
-          </Contain>
-        );
-      }}
-    </Consumer>
-  )
+class Info extends PureComponent {
+  render() {
+    return (
+      <Consumer>
+        {context => {
+          const { actions } = context;
+          return (
+            <Container>
+              <form 
+                onChange={ actions.handleInput } 
+                onKeyPress={(event) => { 
+                  if (event.key === "Enter") {
+                    actions.onClickStartButton(event); 
+                  }
+                }} 
+              >
+                <label style={{ backgroundColor: "#6af" }} htmlFor="player1">Player 1</label>
+                <input maxLength={12} type="text" id="player1"/>
+                <br/>
+                <label style={{ backgroundColor: "#f6c" }} htmlFor="player2">Player 2</label>
+                <input maxLength={12} type="text" id="player2"/>
+                <Button onClick={ actions.onClickStartButton }>Start playing</Button>
+              </form>
+            </Container>
+          );
+        }}
+      </Consumer>
+    )
+  }
 } 
 
 export default Info;

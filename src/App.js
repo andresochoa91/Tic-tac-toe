@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Cell from './components/Cell';
 import Info from './components/Info';
-import tictactoebg from './tictactoebg.png';
+import tictactoebg from './images/tictactoebg.png';
 import { Consumer } from './Context';
 
 const Background = styled.div`
@@ -42,22 +42,23 @@ class App extends Component {
     return (
       <Consumer>
         {context => {
+          const { start, player1, player2, readyToPlay, actions } = context;
           return (
             <Body>
               <Background>
               </Background>
               <Title>Tic Tac Toe!</Title>
               {
-                context.start === false ? 
+                start === false ? 
                 <div>
                   <Paragraph>This is a simple Tic Tac Toe game.</Paragraph>
-                  <Button onClick={ context.startButton }>START</Button>
+                  <Button onClick={ actions.startButton }>START</Button>
                 </div> :
                 
-                context.readyToPlay === false ?
+                readyToPlay === false ?
                 <Info /> :
                 
-                <Cell player1={ context.player1 } player2={ context.player2 }/>
+                <Cell player1={ player1 } player2={ player2 }/>
               }
             </Body>
           );

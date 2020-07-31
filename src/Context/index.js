@@ -41,14 +41,16 @@ export class Provider extends Component {
     const { start, readyToPlay, player1, player2 } = this.state;
     return (
       <TictactoeContext.Provider value={{
-        onClickStartButton: this.onClickStartButton,
-        handleInput: this.handleInput,
-        onClickNewGameButton: this.onClickNewGameButton,
-        player1: player1,      
-        player2: player2,
         start: start,
         readyToPlay: readyToPlay,
-        startButton: this.startButton      
+        player1: player1,      
+        player2: player2,
+        actions: {
+          onClickStartButton: this.onClickStartButton,
+          handleInput: this.handleInput,
+          onClickNewGameButton: this.onClickNewGameButton,
+          startButton: this.startButton      
+        }
       }}>
         { this.props.children }
       </TictactoeContext.Provider>

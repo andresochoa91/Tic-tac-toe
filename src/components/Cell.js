@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from "styled-components";
 import { Square } from './Square';
 import { Consumer } from '../Context';
+import PropTypes from 'prop-types';
 
 //Styled components
 
@@ -59,6 +60,12 @@ const Banner = styled.div`
 `;
 
 class Cell extends Component {
+
+  static propTypes = {
+    player1: PropTypes.string,
+    player2: PropTypes.string,
+  }
+
   state = {
     color: "#6af",
     count: 0,
@@ -69,7 +76,6 @@ class Cell extends Component {
     player2: this.props.player2
   }
   
-
 
   changeColor = (event) => {
     const { color, playing, board } = this.state;
@@ -143,7 +149,7 @@ class Cell extends Component {
     return (
       <Consumer>
         {context => {
-          const { onClickNewGameButton } = context;
+          const { actions } = context;
           const { player1, player2 } = this.props;
           return (
             <Body>
@@ -163,17 +169,14 @@ class Cell extends Component {
                 <Content>
                   { board.map((num, i) => 
                     <Square 
-                      key={ i } 
-                      id={ i } 
-                      color={ num } 
-                      changeColor={ this.changeColor }
+                      key={ i } id={ i } color={ num } changeColor={ this.changeColor }
                     />
                   ) }
                 </Content>  
               </Board>
               <Buttons>
                 <Button onClick={ this.restart }>Restart</Button>
-                <Button onClick={ onClickNewGameButton }>New Game</Button>
+                <Button onClick={ actions.onClickNewGameButton }>New Game</Button>
               </Buttons>
             </Body>
           );
