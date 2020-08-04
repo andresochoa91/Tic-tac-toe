@@ -72,8 +72,6 @@ class Cell extends Component {
     playing: true,
     board: ["", "", "", "", "", "", "", "", ""],
     winner: "",
-    player1: this.props.player1,
-    player2: this.props.player2
   }
   
 
@@ -101,7 +99,7 @@ class Cell extends Component {
   }
 
   chooseWinner () {
-    return this.state.color === "#6af" ? this.state.player2 : this.state.player1;
+    return this.state.color === "#6af" ? this.player2 : this.player1;
   }
 
   componentDidUpdate () {
@@ -134,6 +132,10 @@ class Cell extends Component {
     );
   }
 
+  isPlayer1sTurn() {
+    return this.state.color === "#6af"
+  }
+
   restart = () => {
     this.setState({ 
       playing: true,
@@ -149,8 +151,9 @@ class Cell extends Component {
     return (
       <Consumer>
         {context => {
-          const { actions } = context;
-          const { player1, player2 } = this.props;
+          const { actions, player1, player2 } = context;
+          this.player1 = player1;
+          this.player2 = player2;
           return (
             <Body>
               { winner && <Banner color="#1a7">{winner} wins</Banner>}
@@ -158,7 +161,7 @@ class Cell extends Component {
               <Players>
                 <div>
                   <Paragraph primary="#6af">{ player1 }</Paragraph>
-                  { (color === "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
+                  { (this.isPlayer1sTurn() && playing) && <Banner color="#e69500">Your turn</Banner> }
                 </div>
                 <div>
                   <Paragraph primary="#f6c">{ player2 }</Paragraph>
