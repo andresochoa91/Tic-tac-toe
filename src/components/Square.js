@@ -32,12 +32,12 @@ const Square = ({ id, color, changeColor }) => {
         onClick={ changeColor }
         img={ 
           color === "#6af" ? x : 
-          color === "#f6c" ? o :
-          color === ""
+            color === "#f6c" ? o :
+              color === ""
         }
       />          
     </>
   );
-}
+};
 
 export { Col, Square };

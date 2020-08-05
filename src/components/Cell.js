@@ -90,7 +90,7 @@ const Cell = () => {
   }
   
   const isPlayer1sTurn = () => {
-    return color === "#6af"
+    return color === "#6af";
   }
 
   const restart = () => {
@@ -105,19 +105,20 @@ const Cell = () => {
     return board[num1] &&
            board[num1] === board[num2] &&
            board[num2] === board[num3]
-  }, [ board ]) 
+  }, [ board ]); 
 
   const chooseWinner = useCallback(() => {
     return color === "#6af" ? player2 : player1;
-  }, [ color, player1, player2 ])
+  }, [ color, player1, player2 ]);
 
   const conditions = useCallback(() => {
     let val = validation;
-    return (val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
-            val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
-            val(0, 4, 8) || val(2, 4, 6)                   
+    return (
+      val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
+      val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
+      val(0, 4, 8) || val(2, 4, 6)                   
     );
-  }, [ validation ])
+  }, [ validation ]);
 
   useEffect(() => {
     const cond = conditions();
@@ -164,7 +165,7 @@ const Cell = () => {
       </Buttons>
     </Body>
   );
-}
+};
 
 // Cell.contextTypes = {
 //   player1: PropTypes.string,

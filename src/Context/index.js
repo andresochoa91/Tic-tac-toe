@@ -35,7 +35,6 @@ export const Provider = (props) => {
     setStart(true);
   }
 
-
   return (
     <TictactoeContext.Provider value={{
       start,
@@ -43,16 +42,13 @@ export const Provider = (props) => {
       player1,      
       player2,
       actions: {
-        onClickStartButton: onClickStartButton,
-        handleInput: handleInput,
-        onClickNewGameButton: onClickNewGameButton,
-        startButton: startButton      
+        onClickStartButton,
+        handleInput,
+        onClickNewGameButton,
+        startButton      
       }
     }}>
       { props.children }
     </TictactoeContext.Provider>
-  );
-  
+  );  
 }
-
-export const Consumer = TictactoeContext.Consumer;

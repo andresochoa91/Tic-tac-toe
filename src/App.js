@@ -37,7 +37,7 @@ const Body = styled.div`
 `;
 
 const App = () => {
-  const { start, player1, player2, readyToPlay, actions } = useContext(TictactoeContext);
+  const { start, readyToPlay, actions } = useContext(TictactoeContext);
   return (
     <Body>
       <Background>
@@ -55,7 +55,7 @@ const App = () => {
           ?
             <Info /> 
           :
-            <Cell player1={ player1 } player2={ player2 }/>
+            <Cell />
       }
     </Body>
   );
