@@ -1,4 +1,3 @@
-// import React, { Component } from 'react';
 import React, { useState } from 'react';
 
 export const TictactoeContext = React.createContext();
@@ -9,11 +8,11 @@ export const Provider = (props) => {
   const [ player1, setPlayer1 ] = useState("");
   const [ player2, setPlayer2 ] = useState("");
 
-  const handleInput = (e) => {
-    if (e.target.id === "player1") {
-      setPlayer1(e.target.value);
-    } else if (e.target.id === "player2") {
-      setPlayer2(e.target.value);
+  const handleInput = (event) => {
+    if (event.target.id === "player1") {
+      setPlayer1(/* Number */(event.target.value));
+    } else if (event.target.id === "player2") {
+      setPlayer2(/* Number */(event.target.value));
     }
   } 
 

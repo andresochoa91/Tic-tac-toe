@@ -1,5 +1,4 @@
-// import React, { Component } from 'react';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import styled from "styled-components";
 import { Square } from './Square';
 import { TictactoeContext } from '../Context';
@@ -79,54 +78,22 @@ const Cell = () => {
     if (!board[event.target.id] && playing === true) {    
       const newBoard = [...board];
       newBoard[event.target.id] = color;
-      // this.setState({ board: newBoard });
       setBoard(newBoard);
 
       if (color === "#6af") {
-        // this.setState({ 
-        //   color: "#f6c",
-        // })
         setColor("#f6c");  
       } else {
-        // this.setState({ 
-        //   color: "#6af",
-        // })
         setColor("#6af");
       }
-      // this.setState( prevState => ({
-      //    count: prevState.count + 1 
-      // }));
       setCount(count + 1)
     }
   }
-
-  // componentDidUpdate () {
-  //   const { count, playing } = this.state;
-  //   if ((this.conditions() || count === 9) && playing === true) {
-  //     this.setState({
-  //       playing: false,
-  //     })
-  //     if (this.conditions()) {
-  //       alert(`${ this.chooseWinner() } wins`);
-  //       this.setState({ winner: `${ this.chooseWinner() }` })
-  //     } else {
-  //       alert("Tie");
-  //     }
-  //   } 
-  // }
   
   const isPlayer1sTurn = () => {
     return color === "#6af"
   }
 
   const restart = () => {
-    // this.setState({ 
-    //   playing: true,
-    //   board: ["", "", "", "", "", "", "", "", ""],
-    //   color: "#6af",
-    //   count: 0,
-    //   winner: ""
-    // })
     setPlaying(true);
     setBoard(["", "", "", "", "", "", "", "", ""]);
     setColor("#6af");
@@ -134,44 +101,39 @@ const Cell = () => {
     setWinner("");
   }
 
+  const validation = useCallback((num1, num2, num3) => {
+    return board[num1] &&
+           board[num1] === board[num2] &&
+           board[num2] === board[num3]
+  }, [ board ]) 
+
+  const chooseWinner = useCallback(() => {
+    return color === "#6af" ? player2 : player1;
+  }, [ color, player1, player2 ])
+
+  const conditions = useCallback(() => {
+    let val = validation;
+    return (val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
+            val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
+            val(0, 4, 8) || val(2, 4, 6)                   
+    );
+  }, [ validation ])
+
   useEffect(() => {
-
-    const validation = (num1, num2, num3) => {
-      return board[num1] &&
-             board[num1] === board[num2] &&
-             board[num2] === board[num3]
-    } 
-
-    const chooseWinner = () => {
-      return color === "#6af" ? player2 : player1;
-    }
-
-    const conditions = () => {
-      let val = validation;
-      return (val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
-              val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
-              val(0, 4, 8) || val(2, 4, 6)                   
-      );
-    }
-    
     const cond = conditions();
     const chw = chooseWinner();
 
     if ((cond || count === 9) && playing === true) {
-      // this.setState({
-      //   playing: false,
-      // })
       setPlaying(false);
-
+      
       if (cond) {
         alert(`${ chw } wins`);
-        // this.setState({ winner: `${ this.chooseWinner() }` })
         setWinner(chw);
       } else {
         alert("Tie");
       }
     }
-  }, [ count, playing, color, player1, player2, board ]);
+  }, [ chooseWinner, conditions, count, playing ]);
 
   return (
     <Body>
@@ -203,5 +165,16 @@ const Cell = () => {
     </Body>
   );
 }
+
+// Cell.contextTypes = {
+//   player1: PropTypes.string,
+//   player2: PropTypes.string,
+//   actions: PropTypes.shape({
+//     onClickStartButton: PropTypes.func,
+//     handleInput: PropTypes.func,
+//     onClickNewGameButton: PropTypes.func,
+//     startButton: PropTypes.func   
+//   })
+// }
 
 export default Cell;
