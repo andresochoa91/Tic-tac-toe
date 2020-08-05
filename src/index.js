@@ -5,9 +5,9 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from './Context'
 
 ReactDOM.render(
-    (<Provider>
-      <App />
-    </Provider>),
+  <Provider>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
 

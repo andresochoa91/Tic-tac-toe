@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from "styled-components";
 import { Square } from './Square';
-import { Consumer } from '../Context';
-import PropTypes from 'prop-types';
+import { TictactoeContext } from '../Context';
+// import PropTypes from 'prop-types';
 
 //Styled components
 
@@ -59,134 +60,148 @@ const Banner = styled.div`
   padding: auto 5px;
 `;
 
-class Cell extends Component {
+const Cell = () => {
 
-  static propTypes = {
-    player1: PropTypes.string,
-    player2: PropTypes.string,
-  }
+  // static propTypes = {
+  //   player1: PropTypes.string,
+  //   player2: PropTypes.string,
+  // }
 
-  state = {
-    color: "#6af",
-    count: 0,
-    playing: true,
-    board: ["", "", "", "", "", "", "", "", ""],
-    winner: "",
-  }
-  
+  const [ color, setColor ] = useState("#6af");
+  const [ count, setCount ] = useState(0);
+  const [ playing, setPlaying ] = useState(true);
+  const [ board, setBoard ] = useState(["", "", "", "", "", "", "", "", ""]);
+  const [ winner, setWinner ] = useState("");
 
-  changeColor = (event) => {
-    const { color, playing, board } = this.state;
+  const { player1, player2, actions } = useContext(TictactoeContext);
 
+  const changeColor = (event) => {
     if (!board[event.target.id] && playing === true) {    
       const newBoard = [...board];
       newBoard[event.target.id] = color;
-      this.setState({ board: newBoard });
+      // this.setState({ board: newBoard });
+      setBoard(newBoard);
 
       if (color === "#6af") {
-        this.setState({ 
-          color: "#f6c",
-        })  
+        // this.setState({ 
+        //   color: "#f6c",
+        // })
+        setColor("#f6c");  
       } else {
-        this.setState({ 
-          color: "#6af",
-        })
+        // this.setState({ 
+        //   color: "#6af",
+        // })
+        setColor("#6af");
       }
-      this.setState( prevState => ({
-         count: prevState.count + 1 
-      }));
+      // this.setState( prevState => ({
+      //    count: prevState.count + 1 
+      // }));
+      setCount(count + 1)
     }
   }
 
-  chooseWinner () {
-    return this.state.color === "#6af" ? this.player2 : this.player1;
+  // componentDidUpdate () {
+  //   const { count, playing } = this.state;
+  //   if ((this.conditions() || count === 9) && playing === true) {
+  //     this.setState({
+  //       playing: false,
+  //     })
+  //     if (this.conditions()) {
+  //       alert(`${ this.chooseWinner() } wins`);
+  //       this.setState({ winner: `${ this.chooseWinner() }` })
+  //     } else {
+  //       alert("Tie");
+  //     }
+  //   } 
+  // }
+  
+  const isPlayer1sTurn = () => {
+    return color === "#6af"
   }
 
-  componentDidUpdate () {
-    const { count, playing } = this.state;
-    if ((this.conditions() || count === 9) && playing === true) {
-      this.setState({
-        playing: false,
-      })
-      if (this.conditions()) {
-        alert(`${ this.chooseWinner() } wins`);
-        this.setState({ winner: `${ this.chooseWinner() }` })
+  const restart = () => {
+    // this.setState({ 
+    //   playing: true,
+    //   board: ["", "", "", "", "", "", "", "", ""],
+    //   color: "#6af",
+    //   count: 0,
+    //   winner: ""
+    // })
+    setPlaying(true);
+    setBoard(["", "", "", "", "", "", "", "", ""]);
+    setColor("#6af");
+    setCount(0);
+    setWinner("");
+  }
+
+  useEffect(() => {
+
+    const validation = (num1, num2, num3) => {
+      return board[num1] &&
+             board[num1] === board[num2] &&
+             board[num2] === board[num3]
+    } 
+
+    const chooseWinner = () => {
+      return color === "#6af" ? player2 : player1;
+    }
+
+    const conditions = () => {
+      let val = validation;
+      return (val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
+              val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
+              val(0, 4, 8) || val(2, 4, 6)                   
+      );
+    }
+    
+    const cond = conditions();
+    const chw = chooseWinner();
+
+    if ((cond || count === 9) && playing === true) {
+      // this.setState({
+      //   playing: false,
+      // })
+      setPlaying(false);
+
+      if (cond) {
+        alert(`${ chw } wins`);
+        // this.setState({ winner: `${ this.chooseWinner() }` })
+        setWinner(chw);
       } else {
         alert("Tie");
       }
-    } 
-  }
+    }
+  }, [ count, playing, color, player1, player2, board ]);
 
-  validation = (num1, num2, num3) => {
-    let board = this.state.board;
-    return board[num1] &&
-           board[num1] === board[num2] &&
-           board[num2] === board[num3]
-  }
-  
-  conditions = () => {
-    let val = this.validation;
-    return (val(0, 1, 2) || val(3, 4, 5) || val(6, 7, 8) ||
-            val(0, 3, 6) || val(1, 4, 7) || val(2, 5, 8) ||
-            val(0, 4, 8) || val(2, 4, 6)                   
-    );
-  }
-
-  isPlayer1sTurn() {
-    return this.state.color === "#6af"
-  }
-
-  restart = () => {
-    this.setState({ 
-      playing: true,
-      board: ["", "", "", "", "", "", "", "", ""],
-      color: "#6af",
-      count: 0,
-      winner: ""
-    })
-  }
-
-  render() {
-    const { winner, count, color, playing, board } = this.state;
-    return (
-      <Consumer>
-        {context => {
-          const { actions, player1, player2 } = context;
-          this.player1 = player1;
-          this.player2 = player2;
-          return (
-            <Body>
-              { winner && <Banner color="#1a7">{winner} wins</Banner>}
-              { (!winner && count === 9) && <Banner color="#e69500">Tie</Banner>}
-              <Players>
-                <div>
-                  <Paragraph primary="#6af">{ player1 }</Paragraph>
-                  { (this.isPlayer1sTurn() && playing) && <Banner color="#e69500">Your turn</Banner> }
-                </div>
-                <div>
-                  <Paragraph primary="#f6c">{ player2 }</Paragraph>
-                  { (color !== "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
-                </div>
-              </Players>
-              <Board>
-                <Content>
-                  { board.map((num, i) => 
-                    <Square 
-                      key={ i } id={ i } color={ num } changeColor={ this.changeColor }
-                    />
-                  ) }
-                </Content>  
-              </Board>
-              <Buttons>
-                <Button onClick={ this.restart }>Restart</Button>
-                <Button onClick={ actions.onClickNewGameButton }>New Game</Button>
-              </Buttons>
-            </Body>
-          );
-        }}
-      </Consumer>
-    )
-  }
+  return (
+    <Body>
+      { winner && <Banner color="#1a7">{winner} wins</Banner>}
+      { (!winner && count === 9) && <Banner color="#e69500">Tie</Banner>}
+      <Players>
+        <div>
+          <Paragraph primary="#6af">{ player1 }</Paragraph>
+          { (isPlayer1sTurn() && playing) && <Banner color="#e69500">Your turn</Banner> }
+        </div>
+        <div>
+          <Paragraph primary="#f6c">{ player2 }</Paragraph>
+          { (color !== "#6af" && playing) && <Banner color="#e69500">Your turn</Banner> }
+        </div>
+      </Players>
+      <Board>
+        <Content>
+          { board.map((num, i) => 
+            <Square 
+              key={ i } id={ i } color={ num } changeColor={ changeColor }
+            />
+          ) }
+        </Content>  
+      </Board>
+      <Buttons>
+        <Button onClick={ restart }>Restart</Button>
+        <Button onClick={ actions.onClickNewGameButton }>New Game</Button>
+      </Buttons>
+    </Body>
+  );
 }
 
 export default Cell;

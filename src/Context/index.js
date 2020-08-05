@@ -1,61 +1,59 @@
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-const TictactoeContext = React.createContext();
+export const TictactoeContext = React.createContext();
+export const Provider = (props) => {
+  
+  const [ start, setStart ] = useState(false);
+  const [ readyToPlay, setReadyToPlay ] = useState(false);
+  const [ player1, setPlayer1 ] = useState("");
+  const [ player2, setPlayer2 ] = useState("");
 
-export class Provider extends Component {
-
-  state = {
-    start: false,
-    readyToPlay: false,
-    player1: "",
-    player2: ""
-  }
-
-  handleInput = (e) => {
+  const handleInput = (e) => {
     if (e.target.id === "player1") {
-      this.setState({ player1: e.target.value }) 
+      setPlayer1(e.target.value);
     } else if (e.target.id === "player2") {
-      this.setState({ player2: e.target.value }) 
+      setPlayer2(e.target.value);
     }
   } 
 
-  onClickStartButton = (event) => {
+  const onClickStartButton = (event) => {
     event.preventDefault();
-    const { player1, player2 } = this.state;
     if (player1 && player2) {
-      this.setState({ readyToPlay: true });
+      setReadyToPlay(true);
     } else {
       alert("You must have 2 players to start the game!");
     }
   }
 
-  onClickNewGameButton = () => {
-    this.setState({ readyToPlay: false, player1: "", player2: "" });
+  const onClickNewGameButton = () => {
+    setReadyToPlay(false);
+    setPlayer1("");
+    setPlayer2("");
   }
 
-  startButton = () => {
-    this.setState({ start: true });
+  const startButton = () => {
+    setStart(true);
   }
 
-  render() {
-    const { start, readyToPlay, player1, player2 } = this.state;
-    return (
-      <TictactoeContext.Provider value={{
-        start: start,
-        readyToPlay: readyToPlay,
-        player1: player1,      
-        player2: player2,
-        actions: {
-          onClickStartButton: this.onClickStartButton,
-          handleInput: this.handleInput,
-          onClickNewGameButton: this.onClickNewGameButton,
-          startButton: this.startButton      
-        }
-      }}>
-        { this.props.children }
-      </TictactoeContext.Provider>
-    );
-  }
+
+  return (
+    <TictactoeContext.Provider value={{
+      start,
+      readyToPlay,
+      player1,      
+      player2,
+      actions: {
+        onClickStartButton: onClickStartButton,
+        handleInput: handleInput,
+        onClickNewGameButton: onClickNewGameButton,
+        startButton: startButton      
+      }
+    }}>
+      { props.children }
+    </TictactoeContext.Provider>
+  );
+  
 }
 
 export const Consumer = TictactoeContext.Consumer;

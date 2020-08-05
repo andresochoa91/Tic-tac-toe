@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Consumer } from '../Context';
+import { TictactoeContext } from '../Context';
 
 const Button = styled.button`
   display: block;
@@ -36,35 +36,27 @@ const Container = styled.div`
   }
 `;
 
-class Info extends PureComponent {
-  render() {
-    return (
-      <Consumer>
-        {context => {
-          const { actions } = context;
-          return (
-            <Container>
-              <form 
-                onChange={ actions.handleInput } 
-                onKeyPress={(event) => { 
-                  if (event.key === "Enter") {
-                    actions.onClickStartButton(event); 
-                  }
-                }} 
-              >
-                <label style={{ backgroundColor: "#6af" }} htmlFor="player1">Player 1</label>
-                <input maxLength={12} type="text" id="player1"/>
-                <br/>
-                <label style={{ backgroundColor: "#f6c" }} htmlFor="player2">Player 2</label>
-                <input maxLength={12} type="text" id="player2"/>
-                <Button onClick={ actions.onClickStartButton }>Start playing</Button>
-              </form>
-            </Container>
-          );
-        }}
-      </Consumer>
-    )
-  }
+const Info = () => {
+  const { actions } = useContext(TictactoeContext);
+  return (
+    <Container>
+      <form 
+        onChange={ actions.handleInput } 
+        onKeyPress={(event) => { 
+          if (event.key === "Enter") {
+            actions.onClickStartButton(event); 
+          }
+        }} 
+      >
+        <label style={{ backgroundColor: "#6af" }} htmlFor="player1">Player 1</label>
+        <input maxLength={12} type="text" id="player1"/>
+        <br/>
+        <label style={{ backgroundColor: "#f6c" }} htmlFor="player2">Player 2</label>
+        <input maxLength={12} type="text" id="player2"/>
+        <Button onClick={ actions.onClickStartButton }>Start playing</Button>
+      </form>
+    </Container>
+  );
 } 
 
 export default Info;

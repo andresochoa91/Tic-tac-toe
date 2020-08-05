@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
+// import React, { PureComponent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import o from '../images/o.png';
 import x from '../images/x.png';
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 const Col = styled.div`
   background: url('${props => props.img}') center center/cover;
@@ -17,30 +18,26 @@ const Col = styled.div`
   }
 `;
 
-class Square extends PureComponent {
+const Square = ({ id, color, changeColor }) => {
   
-  static propTypes = {
-    id: PropTypes.number,
-    color: PropTypes.string,
-    changeColor: PropTypes.func
-  }
-
-  render() {
-    const { id, color, changeColor } = this.props;
-    return (
-      <div>
-        <Col 
-          id={ id }
-          onClick={ changeColor }
-          img={ 
-            color === "#6af" ? x : 
-            color === "#f6c" ? o :
-            color === ""
-          }
-        />          
-      </div>
-    );
-  }  
+  // static propTypes = {
+  //   id: PropTypes.number,
+  //   color: PropTypes.string,
+  //   changeColor: PropTypes.func
+  // }
+  return (
+    <>
+      <Col 
+        id={ id }
+        onClick={ changeColor }
+        img={ 
+          color === "#6af" ? x : 
+          color === "#f6c" ? o :
+          color === ""
+        }
+      />          
+    </>
+  );
 }
 
 export { Col, Square };
